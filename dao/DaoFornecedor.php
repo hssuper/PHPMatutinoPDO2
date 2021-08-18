@@ -244,7 +244,7 @@ class DaoFornecedor
     public function excluirFornecedorDAO($id)
     {
         $conn = new Conecta();
-        $conecta = $conn->conectadb();
+        $conecta = $conn->conectadb(); 
         $msg = new Mensagem();
         if ($conecta) {
             try {
