@@ -7,9 +7,18 @@ class Produto {
     private $vlrCompra;
     private $vlrVenda;
     private $qtdEstoque;
+    private $imagem;
     private $fornecedor;
     
-    function getFornecedor() {
+    function getImagem() {
+        return $this->imagem;
+    }
+
+    function setImagem($imagem) {
+        $this->imagem = $imagem;
+    }
+
+        function getFornecedor() {
         return $this->fornecedor;
     }
 

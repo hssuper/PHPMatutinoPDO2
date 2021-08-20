@@ -61,12 +61,59 @@ $btExcluir = FALSE;
                                 $vlrCompra = $_POST['vlrCompra'];
                                 $vlrVenda = $_POST['vlrVenda'];
                                 $qtdEstoque = $_POST['qtdEstoque'];
-                                $fkfornecedor = $_POST['idfornecedor'];                                
-                                
+                                $fkfornecedor = $_POST['idfornecedor'];      
+                                if(isset($_FILES['imagem']) && basename($_FILES["imagem"]["name"]) != ""){
+                                    $target_dir = "img/";
+                                    $target_file = $target_dir . basename($_FILES["imagem"]["name"]);
+                                    $imagem = $target_file;
+                                    $uploadOk = 1;
+                                    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+                                    // Check if image file is a actual image or fake image
+                                    $check = getimagesize($_FILES["imagem"]["tmp_name"]);
+                                    if($check !== false) {
+                                            $uploadOk = 1;
+                                    } else {
+                                            $msg->setMsg("File is not an image.");
+                                            $uploadOk = 0;
+                                    }
+
+                                    // Check if file already exists
+                                    if (file_exists($target_file)) {
+                                        $imagem = $target_file;
+                                        $uploadOk = 0;
+                                    }
+
+                                    // Check file size
+                                    if ($_FILES["imagem"]["size"] > 500000) {
+                                            $msg->setMsg("O arquivo excedeu o limite do tamanho permitido (500KB).");
+                                            $uploadOk = 0;
+                                    }
+
+                                    // Allow certain file formats
+                                    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                                       && $imageFileType != "jfif" && $imageFileType != "gif" ) {
+                                            $msg->setMsg("A extensão da imagem deve ser JPG, JPEG, PNG & "
+                                                    . "GIF.");
+                                            $uploadOk = 0;
+                                    }
+
+                                    // Check if $uploadOk is set to 0 by an error
+                                    if ($uploadOk == 0) {
+                                            $msg->setMsg("A imagem não foi gravada.");
+                                    // if everything is ok, try to upload file
+                                    } else {
+                                        move_uploaded_file($_FILES["imagem"]["tmp_name"], $target_file);
+                                    }
+                                }else{
+                                   
+                                   $imagem = "img/semImagem.jpg";
+                                }
                                 $pc = new ProdutoController();
                                 unset($_POST['cadastrarProduto']);
-                                $msg = $pc->inserirProduto($nomeProduto, $vlrCompra,
-                                        $vlrVenda, $qtdEstoque, $fkfornecedor);
+                                $msg = $pc->inserirProduto($nomeProduto, $vlrCompra, 
+                                    $vlrVenda, $qtdEstoque, $imagem, $fkfornecedor);
+                                
                                 echo $msg->getMsg();
                                 echo "<META HTTP-EQUIV='REFRESH' CONTENT=\"2;
                                     URL='cadastroProduto.php'\">";
@@ -82,12 +129,61 @@ $btExcluir = FALSE;
                                 $vlrVenda = $_POST['vlrVenda'];
                                 $qtdEstoque = $_POST['qtdEstoque'];
                                 $fkfornecedor = $_POST['idfornecedor']; 
-                                
+                                $img =  $_POST['img'];
+                                if(isset($_FILES['imagem']) && basename($_FILES["imagem"]["name"]) != ""){
+                                    $target_dir = "img/";
+                                    $target_file = $target_dir . basename($_FILES["imagem"]["name"]);
+                                    $imagem = $target_file;
+                                    $uploadOk = 1;
+                                    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+                                    // Check if image file is a actual image or fake image
+                                    $check = getimagesize($_FILES["imagem"]["tmp_name"]);
+                                    if($check !== false) {
+                                            $uploadOk = 1;
+                                    } else {
+                                            $msg->setMsg("File is not an image.");
+                                            $uploadOk = 0;
+                                    }
+
+                                    // Check if file already exists
+                                    if (file_exists($target_file)) {
+                                        $imagem = $target_file;
+                                        $uploadOk = 0;
+                                    }
+
+                                    // Check file size
+                                    if ($_FILES["imagem"]["size"] > 500000) {
+                                            $msg->setMsg("O arquivo excedeu o limite do tamanho permitido (500KB).");
+                                            $uploadOk = 0;
+                                    }
+
+                                    // Allow certain file formats
+                                    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                                       && $imageFileType != "jfif" && $imageFileType != "gif" ) {
+                                            $msg->setMsg("A extensão da imagem deve ser JPG, JPEG, PNG & "
+                                                    . "GIF.");
+                                            $uploadOk = 0;
+                                    }
+
+                                    // Check if $uploadOk is set to 0 by an error
+                                    if ($uploadOk == 0) {
+                                        $imagem = "img/semImagem.jpg";
+                                    // if everything is ok, try to upload file
+                                    } else {
+                                        move_uploaded_file($_FILES["imagem"]["tmp_name"], $target_file);
+                                    }
+                                }else{
+                                   if($img != "img/semImagem.jpg"){
+                                       $imagem = $img;
+                                   }else{
+                                        $imagem = "img/semImagem.jpg";
+                                   }
+                                }
                                 $pc = new ProdutoController();
                                 unset($_POST['atualizarProduto']);
-                                $msg = $pc->atualizarProduto($id, $nomeProduto, 
-                                        $vlrCompra, $vlrVenda, $qtdEstoque,
-                                        $fkfornecedor);
+                                $msg = $pc->atualizarProduto($id, $nomeProduto, $vlrCompra, 
+                                    $vlrVenda, $qtdEstoque, $imagem, $fkfornecedor);
                                 echo $msg->getMsg();
                                 $pr = null;
                                 echo "<META HTTP-EQUIV='REFRESH' CONTENT=\"2;
@@ -134,7 +230,7 @@ $btExcluir = FALSE;
                             $pr = $pc->pesquisarProdutoId($id);
                         }
                         ?>
-                        <form method="post" action="">
+                        <form method="post" action="" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-md-12">
                                     <strong>Código: <label style="color:red;">
@@ -144,7 +240,11 @@ $btExcluir = FALSE;
                                                 ?>
                                             </label></strong>
                                         <input type="hidden" name="idproduto" 
-                                               value="<?php echo $pr->getIdProduto(); ?>"><br>
+                                               value="<?php echo $pr->getIdProduto(); ?>">
+                                        <input type="hidden" name="img" 
+                                               value="<?php echo $pr->getImagem(); ?>">
+                                        <br>
+                                        
                                                <?php
                                            }
                                            ?>     
@@ -161,6 +261,8 @@ $btExcluir = FALSE;
                                     <label>Qtde em Estoque</label>  
                                     <input class="form-control" type="number" 
                                            value="<?php echo $pr->getQtdEstoque(); ?>" name="qtdEstoque">
+                                    <label>Imagem</label>  
+                                    <input class="form-control" type="file" name="imagem">
                                     
                                     <label>Fornecedor</label>  
                                     <select class="form-control"  name="idfornecedor">
@@ -244,6 +346,7 @@ $btExcluir = FALSE;
                             <thead class="table-dark">
                                 <tr><th>Código</th>
                                     <th>Produto</th>
+                                    <th>Imagem</th>
                                     <th>Compra (R$)</th>
                                     <th>Venda (R$)</th>
                                     <th>Estoque</th>
@@ -263,6 +366,8 @@ $btExcluir = FALSE;
                                         <tr>
                                             <td><?php print_r($lp->getIdProduto()); ?></td>
                                             <td><?php print_r($lp->getNomeProduto()); ?></td>
+                                            <td><img src="<?php print_r($lp->getImagem()); ?>" 
+                                                     width="48"></td>
                                             <td><?php print_r($lp->getVlrCompra()); ?></td>
                                             <td><?php print_r($lp->getVlrVenda()); ?></td>
                                             <td><?php print_r($lp->getQtdEstoque()); ?></td>

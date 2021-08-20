@@ -15,16 +15,18 @@ class DaoProduto {
             $vlrCompra = $produto->getVlrCompra();
             $vlrVenda = $produto->getVlrVenda();
             $qtdEstoque = $produto->getQtdEstoque();
+            $imagem = $produto->getImagem();
             $fkfornecedor = $produto->getFornecedor();
             try {
                 $conecta->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $stmt = $conecta->prepare("insert into produto values "
-                        . "(null,?,?,?,?,?)");
+                        . "(null,?,?,?,?,?,?)");
                 $stmt->bindParam(1, $nomeProduto);
                 $stmt->bindParam(2, $vlrCompra);
                 $stmt->bindParam(3, $vlrVenda);
                 $stmt->bindParam(4, $qtdEstoque);
-                $stmt->bindParam(5, $fkfornecedor);
+                $stmt->bindParam(5, $imagem);
+                $stmt->bindParam(6, $fkfornecedor);
                 $stmt->execute();
                 $msg->setMsg("<p style='color: green;'>"
                         . "Dados Cadastrados com sucesso</p>");
@@ -50,6 +52,7 @@ class DaoProduto {
             $vlrCompra = $produto->getVlrCompra();
             $vlrVenda = $produto->getVlrVenda();
             $qtdEstoque = $produto->getQtdEstoque();
+            $imagem = $produto->getImagem();
             $fkFornecedor = $produto->getFornecedor();
             try{
                 $conecta->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -58,14 +61,16 @@ class DaoProduto {
                         . "vlrCompra = ?,"
                         . "vlrVenda = ?, "
                         . "qtdEstoque = ?, "
+                        . "imagem = ?, "
                         . "fkFornecedor = ? "
                         . "where id = ?");
                 $stmt->bindParam(1, $nomeProduto);
                 $stmt->bindParam(2, $vlrCompra);
                 $stmt->bindParam(3, $vlrVenda);
                 $stmt->bindParam(4, $qtdEstoque);
-                $stmt->bindParam(5, $fkFornecedor);
-                $stmt->bindParam(6, $id);
+                $stmt->bindParam(5, $imagem);
+                $stmt->bindParam(6, $fkFornecedor);
+                $stmt->bindParam(7, $id);
                 $stmt->execute();
                 $msg->setMsg("<p style='color: blue;'>"
                         . "Dados atualizados com sucesso</p>");
@@ -101,6 +106,7 @@ class DaoProduto {
                             $produto->setVlrCompra($linha->vlrCompra);
                             $produto->setVlrVenda($linha->vlrVenda);
                             $produto->setQtdEstoque($linha->qtdEstoque);
+                            $produto->setImagem($linha->imagem);
                             
                             $forn = new Fornecedor();
                             $forn->setEmail($linha->email);
@@ -169,6 +175,7 @@ class DaoProduto {
                             $produto->setVlrCompra($linha->vlrCompra);
                             $produto->setVlrVenda($linha->vlrVenda);
                             $produto->setQtdEstoque($linha->qtdEstoque);
+                            $produto->setImagem($linha->imagem);
                             
                             $forn = new Fornecedor();
                             $forn->setEmail($linha->email);

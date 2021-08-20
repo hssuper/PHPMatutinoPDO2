@@ -13,7 +13,7 @@ class DaoLogin {
             try{
                 $conecta->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $st = $conecta->prepare("select * from pessoa where login = ? "
-                    . "and senha = ? limit 1");
+                    . "and senha = md5(?) limit 1");
                 $st->bindParam(1, $login);
                 $st->bindParam(2, $senha);
                 if($st->execute()){

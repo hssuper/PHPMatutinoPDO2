@@ -183,7 +183,7 @@ class DaoFornecedor
                 $stmt->bindParam(6, $fkEnd);
                 $stmt->bindParam(7, $idfornecedor);
                 $stmt->execute();
-                $msg->setMsg("<p style='color: blue;'>"
+                $msg->setMsg("<p style='color: black;'>"
                     . "Dados atualizados com sucesso</p>");
             } catch (PDOException $ex) {
                 $msg->setMsg(var_dump($ex->errorInfo));
@@ -244,7 +244,7 @@ class DaoFornecedor
     public function excluirFornecedorDAO($id)
     {
         $conn = new Conecta();
-        $conecta = $conn->conectadb(); 
+        $conecta = $conn->conectadb();
         $msg = new Mensagem();
         if ($conecta) {
             try {

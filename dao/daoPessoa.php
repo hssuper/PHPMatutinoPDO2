@@ -29,6 +29,7 @@ class DaoPessoa {
 
             //$msg->setMsg("$logradouro, $complemento, $cep");
             try {
+                $conecta->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 //processo para pegar o idendereco da tabela endereco, conforme 
                 //o cep, o logradouro e o complemento informado.
                 $st = $conecta->prepare("select idendereco "
@@ -74,7 +75,7 @@ class DaoPessoa {
 
                     //processo para inserir dados de pessoa
                     $stmt = $conecta->prepare("insert into pessoa values "
-                        . "(null,?,?,?,?,?,?,?,?)");
+                        . "(null,?,?,?,md5(?),?,?,?,?)");
                     $stmt->bindParam(1, $nomePessoa);
                     $stmt->bindParam(2, $dtNasc);
                     $stmt->bindParam(3, $login);
@@ -88,8 +89,8 @@ class DaoPessoa {
 
                 $msg->setMsg("<p style='color: green;'>"
                     . "Dados Cadastrados com sucesso</p>");
-            } catch (Exception $ex) {
-                $msg->setMsg($ex);
+            } catch (PDOException $ex) {
+                $msg->setMsg(var_dump($ex->errorInfo));
             }
         } else {
             $msg->setMsg("<p style='color: red;'>"
@@ -123,6 +124,7 @@ class DaoPessoa {
             $perfil = $pessoa->getPerfil();
            // $msg->setMsg($cep);
             try {
+                $conecta->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 //processo para pegar o idendereco da tabela endereco, conforme 
                 //o cep, o logradouro e o complemento informado.
                 $st = $conecta->prepare("select idendereco "
@@ -186,8 +188,8 @@ class DaoPessoa {
                 $stmt->execute();
                 $msg->setMsg("<p style='color: blue;'>"
                     . "Dados atualizados com sucesso</p>");
-            } catch (Exception $ex) {
-                $msg->setMsg($ex);
+            } catch (PDOException $ex) {
+                $msg->setMsg(var_dump($ex->errorInfo));
             }
         } else {
             $msg->setMsg("<p style='color: red;'>"
@@ -204,6 +206,7 @@ class DaoPessoa {
         $conecta = $conn->conectadb();
         if ($conecta) {
             try {
+                $conecta->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $rs = $conecta->query("select * from pessoa inner join endereco "
                     . " on pessoa.fkendereco = endereco.idendereco");
                 $lista = array();
@@ -234,8 +237,8 @@ class DaoPessoa {
                         }
                     }
                 }
-            } catch (Exception $ex) {
-                $msg->setMsg($ex);
+            } catch (PDOException $ex) {
+                $msg->setMsg(var_dump($ex->errorInfo));
             }
             $conn = null;
             return $lista;
@@ -250,14 +253,15 @@ class DaoPessoa {
         $msg = new Mensagem();
         if ($conecta) {
             try {
+                $conecta->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $stmt = $conecta->prepare("delete from pessoa "
                     . "where idpessoa = ?");
                 $stmt->bindParam(1, $id);
                 $stmt->execute();
                 $msg->setMsg("<p style='color: #d6bc71;'>"
                     . "Dados excluídos com sucesso.</p>");
-            } catch (Exception $ex) {
-                $msg->setMsg($ex);
+            } catch (PDOException $ex) {
+                $msg->setMsg(var_dump($ex->errorInfo));
             }
         } else {
             $msg->setMsg("<p style='color: red;'>'Banco inoperante!'</p>");
@@ -274,6 +278,7 @@ class DaoPessoa {
         $pessoa = new Pessoa();
         if ($conecta) {
             try {
+                $conecta->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $rs = $conecta->prepare("select * from pessoa inner join endereco "
                     . " on pessoa.fkendereco = endereco.idendereco where "
                     . "idpessoa = ? limit 1");
@@ -302,8 +307,8 @@ class DaoPessoa {
                         }
                     }
                 }
-            } catch (Exception $ex) {
-                $msg->setMsg($ex);
+            } catch (PDOException $ex) {
+                $msg->setMsg(var_dump($ex->errorInfo));
             }
             $conn = null;
         } else {
